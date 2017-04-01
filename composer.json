@@ -1,5 +1,5 @@
 {
-    "name": "zendframework/zend-mime",
+    "name": "xerkus/zend-mime",
     "description": " ",
     "license": "BSD-3-Clause",
     "keywords": [
@@ -13,13 +13,13 @@
         }
     },
     "require": {
-        "php": "^5.5 || ^7.0",
-        "zendframework/zend-stdlib": "^2.7 || ^3.0"
+        "php": "^7.1",
+        "zendframework/zend-stdlib": "^3.1"
     },
     "require-dev": {
-        "zendframework/zend-mail": "^2.6",
-        "phpunit/PHPUnit": "^4.7 || ^5.7",
-        "zendframework/zend-coding-standard": "~1.0.0"
+        "phpunit/PHPUnit": "^6.0",
+        "zendframework/zend-coding-standard": "~1.0.0",
+        "phpstan/phpstan": "^0.6.4"
     },
     "suggest": {
         "zendframework/zend-mail": "Zend\\Mail component"
@@ -29,7 +29,7 @@
     "extra": {
         "branch-alias": {
             "dev-master": "2.6-dev",
-            "dev-develop": "2.7-dev"
+            "dev-develop": "3.0-dev"
         }
     },
     "autoload-dev": {
@@ -40,12 +40,14 @@
     "scripts": {
         "check": [
             "@cs-check",
+            "@phpstan",
             "@test"
         ],
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
+        "phpstan": "phpstan analyse -l 5 src/",
         "test": "phpunit --colors=always",
-        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
+        "test-coverage": "phpdbg -qrr vendor/bin/phpunit --colors=always --coverage-clover clover.xml",
         "upload-coverage": "coveralls -v"
     }
 }
