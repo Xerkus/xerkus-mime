@@ -19,7 +19,8 @@
     "require-dev": {
         "phpunit/PHPUnit": "^6.0",
         "zendframework/zend-coding-standard": "~1.0.0",
-        "phpstan/phpstan": "^0.6.4"
+        "phpstan/phpstan": "^0.6.4",
+        "malukenho/docheader": "^0.1.5"
     },
     "suggest": {
         "zendframework/zend-mail": "Zend\\Mail component"
@@ -39,12 +40,14 @@
     },
     "scripts": {
         "check": [
+            "@license-check",
             "@cs-check",
             "@phpstan",
             "@test"
         ],
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
+        "license-check": "vendor/bin/docheader check src/ test/",
         "phpstan": "phpstan analyse -l 5 src/",
         "test": "phpunit --colors=always",
         "test-coverage": "phpdbg -qrr vendor/bin/phpunit --colors=always --coverage-clover clover.xml",

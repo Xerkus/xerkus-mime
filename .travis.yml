@@ -19,6 +19,7 @@ matrix:
       env:
         - CS_CHECK=true
         - TEST_COVERAGE=true
+        - PHPSTAN=true
     - php: hhvm 
   allow_failures:
     - php: hhvm
@@ -37,6 +38,8 @@ install:
 script:
   - if [[ $TEST_COVERAGE == 'true' ]]; then composer test-coverage ; else composer test ; fi
   - if [[ $CS_CHECK == 'true' ]]; then composer cs-check ; fi
+  - if [[ $CS_CHECK == 'true' ]]; then composer license-check ; fi
+  - if [[ $PHPSTAN == 'true' ]]; then composer phpstan ; fi
 
 after_script:
   - if [[ $TEST_COVERAGE == 'true' ]]; then composer upload-coverage ; fi
