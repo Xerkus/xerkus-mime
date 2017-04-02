@@ -11,7 +11,7 @@ namespace ZendTest\Mime;
 
 use PHPUnit\Framework\TestCase;
 use Zend\Mime\Headers;
-use Zend\Mime\Header\HeaderInterface;
+use Zend\Mime\Header\Header;
 
 /**
  *
@@ -25,11 +25,11 @@ class HeadersTest extends TestCase
 
     protected function setUp()
     {
-        $this->header1 = $this->createMock(HeaderInterface::class);
+        $this->header1 = $this->createMock(Header::class);
         $this->header1->method('getFieldName')->willReturn('header1');
-        $this->header2 = $this->createMock(HeaderInterface::class);
+        $this->header2 = $this->createMock(Header::class);
         $this->header2->method('getFieldName')->willReturn('header2');
-        $this->header21 = $this->createMock(HeaderInterface::class);
+        $this->header21 = $this->createMock(Header::class);
         $this->header21->method('getFieldName')->willReturn('header2');
     }
 
@@ -335,8 +335,7 @@ class HeadersTest extends TestCase
      */
     public function testWithPrependedHeadersDeduplicatesSameHeaders()
     {
-        $header1 = $this->createMock(HeaderInterface::class);
-        $header1->method('getFieldName')->willReturn('header1');
+        $header1 = $this->header1;
 
         $headers = new Headers();
         $newHeaders = $headers->withPrependedHeaders([$header1, $header1]);

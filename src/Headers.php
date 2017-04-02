@@ -31,6 +31,16 @@ class Headers implements Countable, IteratorAggregate
         }
     }
 
+    public function hasHeader($fieldNameOrHeaderInstance) : bool
+    {
+        if ($fieldNameOrHeaderInstance instanceof Header\Header) {
+            return in_array($fieldNameOrHeaderInstance, $this->headers, true);
+        }
+        $name = $this->normalizeFieldName($fieldNameOrHeaderInstance);
+        return in_array($name, $this->nameMap);
+    }
+
+
     public function getHeader(string $name) : array
     {
         $name = $this->normalizeFieldName($name);
@@ -46,13 +56,20 @@ class Headers implements Countable, IteratorAggregate
         return $this->headers;
     }
 
-    public function hasHeader($fieldNameOrHeaderInstance) : bool
+    public function withHeaders(array $headers) : self
     {
-        if ($fieldNameOrHeaderInstance instanceof Header\HeaderInterface) {
-            return in_array($fieldNameOrHeaderInstance, $this->headers, true);
+        if (empty($headers)) {
+            return $this;
         }
-        $name = $this->normalizeFieldName($fieldNameOrHeaderInstance);
-        return in_array($name, $this->nameMap);
+        $new = clone $this;
+        foreach ($headers as $header) {
+            $new->addHeader($header);
+        }
+        if ($this->headers === $new->headers) {
+            // no change was made
+            return $this;
+        }
+        return $new;
     }
 
     public function withPrependedHeaders(array $headers) : self
@@ -72,26 +89,10 @@ class Headers implements Countable, IteratorAggregate
         return $new;
     }
 
-    public function withHeaders(array $headers) : self
-    {
-        if (empty($headers)) {
-            return $this;
-        }
-        $new = clone $this;
-        foreach ($headers as $header) {
-            $new->addHeader($header);
-        }
-        if ($this->headers === $new->headers) {
-            // no change was made
-            return $this;
-        }
-        return $new;
-    }
-
     /**
      * Returns new instance without headers
      *
-     * @param Header\HeaderInterface[] $headers
+     * @param Header\Header[] $headers
      * @return self
      */
     public function withoutHeaders(array $headers) : self
@@ -130,10 +131,10 @@ class Headers implements Countable, IteratorAggregate
      * Internal helper function that adds header to the end of the list
      * If header is already set, it will be moved to the end
      *
-     * @param Header\HeaderInterface $header
+     * @param Header\Header $header
      * @param boolean $prepend Add to the front instead
      */
-    protected function addHeader(Header\HeaderInterface $header, $prepend = false) : void
+    protected function addHeader(Header\Header $header, $prepend = false) : void
     {
         $this->removeHeader($header);
         if ($prepend) {
@@ -148,7 +149,7 @@ class Headers implements Countable, IteratorAggregate
     /**
      * Internal helper function that removes header from the list
      */
-    protected function removeHeader(Header\HeaderInterface $header) : void
+    protected function removeHeader(Header\Header $header) : void
     {
         $key = array_search($header, $this->headers, true);
         if ($key === false) {

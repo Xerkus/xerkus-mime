@@ -9,7 +9,7 @@ declare(strict_types = 1);
 
 namespace Zend\Mime\Header;
 
-interface HeaderInterface
+interface Header
 {
     public function getFieldName() : string;
     public function getFieldValue() : string;
